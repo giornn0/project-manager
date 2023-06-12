@@ -2,7 +2,11 @@
 import { ModalContext } from "@/contexts/modal.service";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import { useContext } from "react";
-import CreateProject from "./CreateProject";
+import dynamic from "next/dynamic";
+
+const CreateProject = dynamic(() => import("../components/CreateProject"), {
+  ssr: false,
+});
 
 export default function AddProjectButton() {
   const modalContext = useContext(ModalContext);

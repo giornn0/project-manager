@@ -44,7 +44,7 @@ export default function WatchOwnerDetails({
           {owner?.lastname}, {owner?.name}
         </p>
         <br />
-        <p className="text-lg ml-2">
+        <p className="text-lg ml-1">
           <AttachEmailIcon />
           {owner?.email} <br />
           <PhoneAndroidIcon />

@@ -1,8 +1,12 @@
 "use client";
 import { ModalContext } from "@/contexts/modal.service";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import dynamic from "next/dynamic";
 import { useContext } from "react";
-import CreateOwner from "./CreateOwner";
+
+const CreateOwner = dynamic(() => import("../components/CreateOwner"), {
+  ssr: false,
+});
 
 export default function AddOwnerButton() {
   const modalContext = useContext(ModalContext);

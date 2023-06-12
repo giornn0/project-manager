@@ -4,7 +4,7 @@ import { Project } from "@/constants/models";
 import { invoke } from "@tauri-apps/api";
 import { useEffect, useState } from "react";
 
-export default function Projects() {
+export default function ListProjects() {
   const [projects, setProjects] = useState<Array<Project>>([]);
   const updateProjects = (listed: Array<Project>) => setProjects(listed);
   useEffect(() => {
