@@ -1,7 +1,6 @@
 "use client";
-
-import { Owner } from "@/constants/models";
-import { ModalContext } from "@/contexts/modal.service";
+import { ModalContext } from "@/contexts/modal.context";
+import { Owner } from "@/models/Owner";
 import { AddBox, CancelSharp } from "@mui/icons-material";
 import { Box, TextField } from "@mui/material";
 import { invoke } from "@tauri-apps/api";
@@ -34,6 +33,7 @@ export default function CreateOwner() {
   ) => {
     setOwner((prev) => ({ ...prev, [camp]: event.target.value }));
   };
+
   return (
     <Box
       component="form"

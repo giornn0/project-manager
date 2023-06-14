@@ -1,4 +1,4 @@
-import { Nullable } from "@/constants/models";
+import { Nullable } from "@/constants/types";
 import { Dispatch, ReactElement, SetStateAction, createContext } from "react";
 
 export interface IModalContext {

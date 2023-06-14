@@ -15,7 +15,7 @@ pub struct NewOwner {
 
 #[tauri::command]
 pub async fn get_owners(state: tauri::State<'_, DbConnection>) -> Result<Vec<Owner>, Error> {
-    let owners = EOwner::find().all(&*state.connection.clone()).await?;
+    let owners = EOwner::find().all(&*state.conn.clone()).await?;
 
     Ok(owners)
 }
@@ -26,7 +26,7 @@ pub async fn get_owner_by_id(
     state: tauri::State<'_, DbConnection>,
 ) -> Result<Owner, Error> {
     let owner = EOwner::find_by_id(owner_id)
-        .all(&*state.connection.clone())
+        .all(&*state.conn.clone())
         .await?
         .first()
         .expect("Id invalid")
@@ -47,7 +47,7 @@ pub async fn create_owner(
         phone: ActiveValue::Set(owner_data.phone),
         email: ActiveValue::Set(owner_data.email),
     };
-    let insert = owner.insert(&*state.connection.clone()).await?;
+    let insert = owner.insert(&*state.conn.clone()).await?;
 
     Ok(insert)
 }

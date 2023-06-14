@@ -1,12 +1,13 @@
 "use client";
 import ProjectCard from "@/components/ProjectCard";
-import { Project } from "@/constants/models";
+import { Project } from "@/models/Project";
 import { invoke } from "@tauri-apps/api";
 import { useEffect, useState } from "react";
 
 export default function ListProjects() {
   const [projects, setProjects] = useState<Array<Project>>([]);
   const updateProjects = (listed: Array<Project>) => setProjects(listed);
+
   useEffect(() => {
     invoke<Array<Project>>("get_projects")
       .then(updateProjects)
@@ -16,7 +17,7 @@ export default function ListProjects() {
   return (
     <ul>
       {projects.map((project) => (
-        <li key={project.id}>
+        <li className="my-2" key={project.id}>
           <ProjectCard project={project} />
         </li>
       ))}

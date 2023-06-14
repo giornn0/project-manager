@@ -1,5 +1,5 @@
 "use client";
-import { ModalContext } from "@/contexts/modal.service";
+import { ModalContext } from "@/contexts/modal.context";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import dynamic from "next/dynamic";
 import { useContext } from "react";

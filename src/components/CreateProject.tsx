@@ -1,19 +1,40 @@
-import { Owner, Project } from "@/constants/models";
-import { ModalContext } from "@/contexts/modal.service";
+import { BackdropContext } from "@/contexts/backdrop.context";
+import { ModalContext } from "@/contexts/modal.context";
+import { Owner } from "@/models/Owner";
+import { Project } from "@/models/Project";
 import { AddBox, CancelSharp } from "@mui/icons-material";
 import { Box, MenuItem, TextField } from "@mui/material";
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
 
-export default function CreateProject() {
+export interface CreateProjectProps {
+  editProject?: Project;
+}
+
+export default function CreateProject({ editProject }: CreateProjectProps) {
   const [project, setProject] = useState({} as Project);
   const [owners, setOwners] = useState<Array<Owner>>([]);
   const modalContext = useContext(ModalContext);
+  const backdropContext = useContext(BackdropContext);
 
   useEffect(() => {
+    backdropContext.setBackdropContext({
+      state: true,
+      dismisable: false,
+      setBackdropContext: backdropContext.setBackdropContext,
+    });
     invoke<Array<Owner>>("get_owners")
-      .then((owners) => setOwners(owners))
-      .catch(console.error);
+      .then((owners) => {
+        setOwners(owners);
+        if (editProject) setProject(editProject);
+      })
+      .catch(console.error)
+      .finally(() =>
+        backdropContext.setBackdropContext((prev) => ({
+          ...prev,
+          state: false,
+        }))
+      );
   }, []);
 
   const closeModal = () => {
@@ -25,9 +46,11 @@ export default function CreateProject() {
 
   const createProject = async () => {
     try {
-      invoke<Project>("create_project", { projectData: project })
-        .then(console.log)
-        .catch(console.error);
+      const invocation = editProject
+        ? invoke<Project>("update_project", { projectData: project })
+        : invoke<Project>("create_project", { projectData: project });
+
+      invocation.then(console.log).catch(console.error);
     } catch (e) {
       console.error(e);
       debugger;
@@ -60,7 +83,8 @@ export default function CreateProject() {
           select
           margin="none"
           id="outlined-required"
-          label="Last Name"
+          label="Owner"
+          disabled={!!editProject && !!project.owner_id}
           defaultValue={project.owner_id || null}
           onChange={(event) => handleChange(event, "owner_id")}
         >

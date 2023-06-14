@@ -1,23 +1,39 @@
 "use client";
-
-import { Nullable, Payment } from "@/constants/models";
-import { ModalContext } from "@/contexts/modal.service";
+import { ModalContext } from "@/contexts/modal.context";
 import { AddBox, CancelSharp } from "@mui/icons-material";
 import { Box, TextField } from "@mui/material";
 import { invoke } from "@tauri-apps/api";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/es";
+import { Payment } from "@/models/Payment";
+import { Nullable } from "@/constants/types";
+import { Project } from "@/models/Project";
+import dayjs, { Dayjs } from "dayjs";
 
 export interface CreatePaymentProps {
-  project_id: string;
+  project: Project;
+  editPayment?: Payment;
 }
 
-export default function CreatePayment({ project_id }: CreatePaymentProps) {
+export default function CreatePayment({
+  project,
+  editPayment,
+}: CreatePaymentProps) {
   const modalContext = useContext(ModalContext);
+  const [payment, setPayment] = useState({ project_id: project.id } as Payment);
+
+  useEffect(() => {
+    debugger;
+    if (editPayment)
+      setPayment({
+        ...editPayment,
+        date: dayjs(new Date(editPayment.date as Date)),
+      });
+  }, []);
 
   const closeModal = () => {
     modalContext?.setModalContext((prev) => ({
@@ -26,18 +42,17 @@ export default function CreatePayment({ project_id }: CreatePaymentProps) {
     }));
   };
 
-  const [payment, setPayment] = useState({ project_id } as Payment);
   const createPayment = async () => {
     try {
-      console.log(payment);
-      invoke<Payment>("create_payment", {
-        paymentData: { ...payment, amount: Number(payment.amount) },
-      })
-        .then(console.log)
-        .catch((err) => {
-          console.error(err);
-          debugger;
+      const invocation = editPayment
+        ? invoke<Payment>("update_payment", {
+          paymentData: { ...payment, amount: Number(payment.amount) },
+        })
+        : invoke<Payment>("create_payment", {
+          paymentData: { ...payment, amount: Number(payment.amount) },
         });
+
+      invocation.then(console.log).catch((err) => console.error(err));
     } catch (e) {
       console.error(e);
     }
@@ -49,7 +64,10 @@ export default function CreatePayment({ project_id }: CreatePaymentProps) {
     setPayment((prev) => ({ ...prev, [camp]: event.target.value }));
   };
 
-  const handleChangeDate = (event: Nullable<Date>, camp: keyof Payment) => {
+  const handleChangeDate = (
+    event: Nullable<Dayjs | Date>,
+    camp: keyof Payment
+  ) => {
     setPayment((prev) => ({ ...prev, [camp]: event }));
   };
   return (
@@ -65,6 +83,7 @@ export default function CreatePayment({ project_id }: CreatePaymentProps) {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
+                  disabled={!!editPayment}
                   value={payment.date || null}
                   onChange={(event) => handleChangeDate(event, "date")}
                 />
@@ -76,7 +95,7 @@ export default function CreatePayment({ project_id }: CreatePaymentProps) {
             id="outlined-required"
             margin="none"
             label="Amount"
-            type="number"
+            // type="number"
             defaultValue={payment.amount || null}
             onChange={(event) => handleChange(event, "amount")}
           />

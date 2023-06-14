@@ -1,12 +1,11 @@
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{ConnectOptions, DatabaseConnection};
-use std::sync::Arc;
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use crate::errors::Error;
 
 pub struct DbConnection {
-    pub connection: Arc<DatabaseConnection>,
+    pub conn: Arc<DatabaseConnection>,
 }
 
 pub async fn start_database() -> Result<DbConnection, Error> {
@@ -21,10 +20,10 @@ pub async fn start_database() -> Result<DbConnection, Error> {
         .sqlx_logging(true)
         .sqlx_logging_level(log::LevelFilter::Info);
 
-    let connection = sea_orm::Database::connect(opt).await?;
-    Migrator::up(&connection, None).await?;
+    let conn = sea_orm::Database::connect(opt).await?;
+    Migrator::up(&conn, None).await?;
 
     Ok(DbConnection {
-        connection: Arc::new(connection),
+        conn: Arc::new(conn),
     })
 }

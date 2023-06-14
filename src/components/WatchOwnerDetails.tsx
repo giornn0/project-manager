@@ -1,6 +1,4 @@
 "use client";
-import { Nullable, Owner } from "@/constants/models";
-import { ModalContext } from "@/contexts/modal.service";
 import { CancelSharp } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { invoke } from "@tauri-apps/api";
@@ -8,6 +6,9 @@ import { useContext, useEffect, useState } from "react";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import { Owner } from "@/models/Owner";
+import { Nullable } from "@/constants/types";
+import { ModalContext } from "@/contexts/modal.context";
 
 export interface WatchOwnerDetailsProps {
   owner_id: string;

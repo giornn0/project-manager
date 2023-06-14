@@ -1,8 +1,8 @@
 "use client";
-import { ModalContext } from "@/contexts/modal.service";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import { useContext } from "react";
 import dynamic from "next/dynamic";
+import { ModalContext } from "@/contexts/modal.context";
 
 const CreateProject = dynamic(() => import("../components/CreateProject"), {
   ssr: false,

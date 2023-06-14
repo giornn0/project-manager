@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalContext } from "@/contexts/modal.service";
+import { ModalContext } from "@/contexts/modal.context";
 import { Modal } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 
