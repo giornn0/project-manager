@@ -41,6 +41,9 @@ export default function CreateOwner() {
       autoComplete="off"
       className="bg-slate-200 h-full px-4 py-8 overflow-auto"
     >
+      <h3 className="text-black underline underline-offset-1 font-bold text-xl">
+        Owner
+      </h3>
       <div className="h-fit grid grid-cols-1 gap-8 my-4">
         <TextField
           required

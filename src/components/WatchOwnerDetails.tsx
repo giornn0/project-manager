@@ -12,10 +12,12 @@ import { ModalContext } from "@/contexts/modal.context";
 
 export interface WatchOwnerDetailsProps {
   owner_id: string;
+  action?: boolean;
 }
 
 export default function WatchOwnerDetails({
   owner_id,
+  action,
 }: WatchOwnerDetailsProps) {
   const [owner, setOwner] = useState<Nullable<Owner>>(null);
   const modalContext = useContext(ModalContext);
@@ -34,12 +36,19 @@ export default function WatchOwnerDetails({
       .then((owner) => setOwner(owner))
       .catch(console.error);
   }, []);
+
+  const withAction = action !== false;
+
   return (
     <Box
       component="section"
-      className="bg-slate-200 h-full px-4 py-8 overflow-auto"
+      className={`bg-black bg-transparent h-full ${withAction ? "px-4 py-8" : "py-4"
+        } overflow-auto`}
     >
-      <div className="p-12 bg-blue-50 text-black font-bold my-4 rounded">
+      <div
+        className={`p-12 bg-blue-50 text-black font-bold rounded ${withAction ? "my-4" : "my-1"
+          }`}
+      >
         <p className="text-xl">
           <AssignmentIndIcon fontSize="large" />
           {owner?.lastname}, {owner?.name}
@@ -51,15 +60,14 @@ export default function WatchOwnerDetails({
           <PhoneAndroidIcon />
           {owner?.phone}
         </p>
-      </div>
-      <div className="w-full flex flex-row justify-around gap-6">
-        <button
-          onClick={closeModal}
-          className="p-4 bg-red-200 hover:bg-red-500 hover:ring-2 ring-white rounded hover:text-black"
-        >
-          <CancelSharp className="mr-2" />
-          Cancelar
-        </button>
+        {withAction && (
+          <button
+            onClick={closeModal}
+            className="p-2 bg-red-200 hover:bg-red-500 hover:ring-1 ring-white  hover:text-black absolute right-4 top-12"
+          >
+            <CancelSharp />
+          </button>
+        )}
       </div>
     </Box>
   );

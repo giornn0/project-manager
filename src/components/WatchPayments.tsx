@@ -44,7 +44,10 @@ export default function WatchPayments({ project }: WatchPaymentsProps) {
       .catch(console.error);
   }, []);
   return (
-    <Box component="ul" className="bg-slate-200 h-full px-4 py-8 overflow-auto">
+    <Box
+      component="ul"
+      className=" bg-transparent h-full px-4 py-8 overflow-auto"
+    >
       {payments.map((paym) => (
         <li
           key={paym.id}
@@ -64,15 +67,12 @@ export default function WatchPayments({ project }: WatchPaymentsProps) {
           />
         </li>
       ))}
-      <div className="w-full flex flex-row justify-around gap-6">
-        <button
-          onClick={closeModal}
-          className="p-4 bg-red-200 hover:bg-red-500 hover:ring-2 ring-white rounded hover:text-black"
-        >
-          <CancelSharp className="mr-2" />
-          Cancelar
-        </button>
-      </div>
+      <button
+        onClick={closeModal}
+        className="p-2 bg-red-200 hover:bg-red-500 hover:ring-1 ring-white  hover:text-black absolute right-4 top-1"
+      >
+        <CancelSharp />
+      </button>{" "}
     </Box>
   );
 }

@@ -1,18 +1,19 @@
 "use client";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { ModalContext } from "@/contexts/modal.context";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import Link from "next/link";
 import { Tooltip } from "@mui/material";
 import dynamic from "next/dynamic";
 import { Project } from "@/models/Project";
 
 export interface ProjectCardProps {
   project: Project;
+  setUpdater: Dispatch<SetStateAction<undefined>>;
+  setProjects: Dispatch<SetStateAction<Array<Project>>>;
 }
 
 const WatchOwnerDetails = dynamic(
@@ -31,8 +32,15 @@ const CreateProject = dynamic(() => import("../components/CreateProject"), {
 const CreatePayment = dynamic(() => import("../components/CreatePayment"), {
   ssr: false,
 });
+const DeleteProject = dynamic(() => import("../components/DeleteProject"), {
+  ssr: false,
+});
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  setUpdater,
+  setProjects,
+}: ProjectCardProps) {
   const modalContext = useContext(ModalContext);
   const chargePayment = () => {
     modalContext.setModalContext((prev) => ({
@@ -55,7 +63,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   const updateProject = () => {
     modalContext.setModalContext((prev) => ({
-      modalContent: <CreateProject editProject={project} />,
+      modalContent: (
+        <CreateProject editProject={project} setUpdater={setUpdater} />
+      ),
+      setModalContext: prev.setModalContext,
+    }));
+  };
+
+  const deleteProjectDialog = () => {
+    modalContext.setModalContext((prev) => ({
+      modalContent: (
+        <DeleteProject project={project} setUpdater={setProjects} />
+      ),
       setModalContext: prev.setModalContext,
     }));
   };
@@ -63,12 +82,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <>
       <section className="w-full h-full grid grid-cols-3 md:grid-cols-4  p-2  hover:bg-white hover:ring-2 ring-blue-100 hover:text-black rounded hover:cursor-pointer">
-        <Link
+        <div
           className="col-span-1 h-full flex items-center md:col-span-2"
-          href={project.url}
+        // href={project.url}
         >
           <p className="font-bold text-lg">{project.name}</p>
-        </Link>
+        </div>
         <div className=" col-span-2 md:col-span-2 gap-2 w-full flex flex-row justify-end">
           <Tooltip title="Owner details">
             <button
@@ -106,7 +125,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </Tooltip>
           <Tooltip title="Delete">
             <button
-              onClick={watchPayments}
+              onClick={deleteProjectDialog}
               className="p-2 rounded-lg text-red-300 bg-blue-200 hover:bg-red-500 hover:ring-2 ring-white hover:text-black "
             >
               <DeleteForeverIcon />

@@ -78,6 +78,9 @@ export default function CreatePayment({
         autoComplete="off"
         className="bg-slate-200 h-full px-4 py-8 overflow-auto"
       >
+        <h3 className="text-black underline underline-offset-1 font-bold text-xl">
+          Payment
+        </h3>
         <div className="h-fit grid grid-cols-1 gap-8 my-4">
           <div>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
@@ -95,7 +98,7 @@ export default function CreatePayment({
             id="outlined-required"
             margin="none"
             label="Amount"
-            // type="number"
+            type="number"
             defaultValue={payment.amount || null}
             onChange={(event) => handleChange(event, "amount")}
           />
@@ -111,10 +114,13 @@ export default function CreatePayment({
 
           <button
             onClick={createPayment}
-            className="p-4 bg-blue-200 hover:bg-blue-500 hover:ring-2 ring-white rounded hover:text-black"
+            className={`p-4 ${!!editPayment
+                ? "bg-yellow-200 hover:bg-yellow-500"
+                : "bg-blue-200 hover:bg-blue-500"
+              } hover:ring-2 ring-white rounded hover:text-black`}
           >
             <AddBox className="mr-2" />
-            Create
+            {!!editPayment ? "Edit" : "Create"}
           </button>
         </div>
       </Box>
