@@ -24,7 +24,6 @@ export default function CreateOwner() {
         .catch(console.error);
     } catch (e) {
       console.error(e);
-      debugger;
     }
   };
   const handleChange = (
