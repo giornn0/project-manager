@@ -16,7 +16,7 @@ import WatchOwnerDetails from "./WatchOwnerDetails";
 
 export interface CreateProjectProps {
   editProject?: Project;
-  setUpdater: Dispatch<SetStateAction<undefined>>;
+  setUpdater?: Dispatch<SetStateAction<undefined>>;
 }
 
 export default function CreateProject({
@@ -64,7 +64,9 @@ export default function CreateProject({
       invocation
         .then(console.log)
         .catch(console.error)
-        .finally(() => setUpdater(undefined));
+        .finally(() => {
+          if (setUpdater) setUpdater(undefined);
+        });
     } catch (e) {
       console.error(e);
       debugger;
@@ -136,10 +138,11 @@ export default function CreateProject({
 
         <button
           onClick={createProject}
-          className={`p-4 ${!!editProject
+          className={`p-4 ${
+            !!editProject
               ? "bg-yellow-200 hover:bg-yellow-500"
               : "bg-blue-200 hover:bg-blue-500"
-            } hover:ring-2 ring-white rounded hover:text-black`}
+          } hover:ring-2 ring-white rounded hover:text-black`}
         >
           <AddBox className="mr-2" />
           {!!editProject ? "Edit" : "Create"}
